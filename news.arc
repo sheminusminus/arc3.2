@@ -425,6 +425,7 @@
   (tag head 
     (prn "
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <!--[if IE]><meta name=\"X-UA-Compatible\" content=\"IE=edge\"><![endif]-->
     <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/apple-touch-icon.png\">
     <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/favicon-32x32.png\">
     <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/favicon-16x16.png\">
@@ -432,6 +433,8 @@
     <link rel=\"mask-icon\" href=\"/safari-pinned-tab.svg\" color=\"#5bbad5\">
     <meta name=\"msapplication-TileColor\" content=\"#da532c\">
     <meta name=\"theme-color\" content=\"#ffffff\">
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"/normalize.css\">
+    <link rel=\"stylesheet\" type=\"text/css\" href=\"/news_mobile.css\">
     <link rel=\"stylesheet\" type=\"text/css\" href=\"/news.css\">
     <link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"@(rss-url label)\">
     <link rel=\"shortcut icon\" href=\"" favicon-url* "\">
@@ -445,7 +448,7 @@
      (gen-head ,title ,label)
      (tag body 
        (center
-         (tag (table id 'hnmain
+         (tag (table id 'hnmain class 'hnmain
                      border 0 cellpadding 0 cellspacing 0 width "85%"
                      bgcolor sand)
            ,@body)))))
@@ -474,21 +477,24 @@
     (vspace 10)
     (center
       (chess-board user)))
-  (vspace 10)
+  (vspace 16)
   (color-stripe (main-color user))
   (br)
+  (vspace 8)
   (center
     (hook 'longfoot)
+    (tag (div class "footer")
     (w/bars
       (link "Welcome" welcome-url*)
       (link "Guidelines" "/guidelines.html")
       (link "Bookmarklet" "/bookmarklet.html")
       (link "Feature Requests" "/item?id=230")
       (link "Contact" "mailto:@site-email*")
-      (link "Twitter" "https://twitter.com/theshawwn"))
+      (link "Twitter" "https://twitter.com/theshawwn")))
     (br2)
     (w/bars
       (link "RSS (stories)" "/rss")
+      (tag (span class 'horizontalspace))
       (link "RSS (comments)" "/rsscomments"))
     (admin-bar user elapsed whence)))
 
@@ -508,7 +514,7 @@
     (prn "<iframe src=\"https://open.spotify.com/embed/user/johanbrook/playlist/2mtlhuFVOFMn6Ho3JmrLc2\" width=\"300\" height=\"380\" frameborder=\"0\" allowtransparency=\"true\" allow=\"encrypted-media\"></iframe>")))
 
 (def color-stripe (c)
-  (tag (table width "100%" cellspacing 0 cellpadding 1)
+  (tag (table class 'colorstripe width "90%" cellspacing 0 cellpadding 1)
     (tr (tdcolor c))))
 
 (mac shortpage (user lid label title whence . body)
@@ -595,14 +601,16 @@ function vote(node) {
                     style "padding:2px")
           (tr (gen-logo)
               (when (is switch 'full)
-                (tag (td style "line-height:12pt; height:10px;")
+                (tag (td style "height:10px;")
                   (spanclass pagetop
-                    (tag b (link site-name* "/l/all"))
+                    (tag "strong" (link site-name* "/l/all"))
+                        (unless (mem label toplabels*)
+                          (tag (span class "sublaarc") (pr label)))
                     (hspace 10)
-                    (toprow user label))))
+                    (tag (div class "menuwrap") (toprow user label)))))
              (if (is switch 'full)
                  (tag (td style "text-align:right;padding-right:4px;")
-                   (spanclass pagetop (topright user whence)))
+                   (spanclass "userlinks" (topright user whence)))
                  (tag (td style "line-height:12pt; height:10px;")
                    (spanclass pagetop (tag b (link label "/l/all")))))))))
   (map [_ user] pagefns*)
@@ -621,6 +629,8 @@ function vote(node) {
 (= welcome-url* "/welcome.html"
    discord-url* "https://discord.gg/qaqkc9z")
 
+(= bar* "")
+
 (def toprow (user label)
   (w/bars 
     (toplink "new" "/newest" label)
@@ -631,8 +641,7 @@ function vote(node) {
     (hook 'toprow user label)
     (link "tags" "/l")
     (link "submit" "/submit")
-    (unless (mem label toplabels*)
-      (fontcolor white (pr label)))))
+    ))
 
 (def toplink (name dest label)
   (tag-if (is name label) (span class 'topsel)
@@ -944,7 +953,12 @@ function vote(node) {
     (display-items user items label title url 0 perpage* number)))
 
 
-(newsop newest () (newestpage user))
+(newsop newest ()
+  (tostring
+  (load "news.arc")
+  (load-items)
+  (load-users))
+  (newestpage user))
 
 ; Note: dead/deleted items will persist for the remaining life of the 
 ; cached page.  If this were a prob, could make deletion clear caches.
@@ -1037,7 +1051,7 @@ function vote(node) {
     (let n start
       (each i (cut items start end)
         (display-item (and number (++ n)) i user whence t)
-        (spacerow (if (acomment i) 15 5))))
+        (spacerow (if (acomment i) 15 16))))
     (when end
       (let newend (+ end perpage*)
         (when (and (<= newend maxend*) (< end (len items)))
@@ -1106,9 +1120,9 @@ function vote(node) {
                                                  kill   nil))
                                  whence)
                       (let ban (car (banned-sites* it))
-                        (tag-if ban (font color (case ban 
-                                                  ignore darkred 
-                                                  kill   darkblue))
+                        (tag-if ban (p class (case ban 
+                                                  ignore "text ignored"
+                                                  kill   "text killed"))
                           (pr it))))
                     (link it "/from?site=@it"))
                 (pr ") "))))

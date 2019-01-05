@@ -1,0 +1,132 @@
+:root {
+  --color-sand: rgb(246, 246, 239);
+  --color-white: rgb(255, 255, 255);
+  --color-site: rgb(154, 186, 170);
+}
+
+/* withBars */
+.pagetop .menuwrap a::after {
+  content: '|';
+  margin-right: 4px;
+  margin-left: 4px;
+}
+
+/* withBars */
+.pagetop .menuwrap strong a::after,
+.pagetop .menuwrap a:last-child::after {
+  content: '';
+}
+
+@media (max-width: 767px) {
+  table,
+  tbody,
+  tr {
+    max-width: 100% !important;
+  }
+
+  /* special font styles */
+
+  .text.banned {
+    color: rgb(180, 0, 0);
+  }
+
+  .text.killed {
+    color: rgb(0, 0, 120);
+  }
+
+  /* */
+
+  body {
+    background-color: var(--color-sand);
+  }
+
+  .hnmain >tbody > tr > td {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .hnmain >tbody > tr > td:first-child {
+    padding-left: 4px;
+  }
+
+  .hnmain >tbody > tr > td:last-child {
+    padding-right: 4px;
+  }
+
+  .pagetop {
+    width: 80%;
+  }
+
+  .pagetop strong {
+    line-height: 18px;
+    font-size: 13px;
+  }
+
+  .sublaarc {
+    color: white;
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: normal;
+  }
+
+  .menuwrap {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .menuwrap a {
+    line-height: 18px;
+  }
+
+  .pagetop .menuwrap a::after {
+    content: '|';
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+
+  .pagetop .menuwrap strong a::after,
+  .pagetop .menuwrap a:last-child::after {
+    content: '';
+  }
+
+  .title ~ td {
+    padding-left: 3px;
+  }
+
+  .subtext > span:first-child {
+    padding-left: 3px;
+  }
+
+  .footer a {
+    padding-left: 8px;
+    padding-right: 8px;
+    position: relative;
+    line-height: 24px;
+  }
+
+  .footer a::after {
+    position: absolute;
+    left: 50%;
+  }
+
+  .horizontalspace {
+    display: inline-block;
+    width: 8px;
+  }
+
+  .colorstripe {
+    margin-left: 5%;
+  }
+}
+
+@media (min-width: 768px) {
+  body {
+    background-color: var(--color-white);
+  }
+
+  .hnmain {
+    background-color: var(--color-sand);
+  }
+}

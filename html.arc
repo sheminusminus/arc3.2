@@ -97,6 +97,7 @@
 (attribute body       marginwidth    opnum)
 (attribute body       topmargin      opnum)
 (attribute body       vlink          opcolor)
+(attribute center     class          opstring)
 (attribute font       color          opcolor)
 (attribute font       face           opstring)
 (attribute font       size           opnum)
@@ -126,6 +127,7 @@
 (attribute table      cellspacing    opnum)
 (attribute table      width          opstring)
 (attribute table      id             opsym)
+(attribute table      class          opstring)
 (attribute textarea   cols           opnum)
 (attribute textarea   name           opstring)
 (attribute textarea   rows           opnum)
@@ -391,7 +393,7 @@
 
 (def link (text (o dest text) (o color) (o onclick) (o title))
   (tag (a href dest onclick onclick title title)
-    (tag-if color (font color color)
+    (tag-if color (span class color)
       (pr text))))
 
 (def underlink (text (o dest text) (o onclick) (o title))
